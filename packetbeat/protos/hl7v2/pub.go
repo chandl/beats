@@ -152,35 +152,36 @@ func (pub *transPub) createEvent(requ, resp *message) beat.Event {
 										}
 									}
 								}
-							} else {
-								// Re-map fieldname if configured
-								if pub.namemappingmap[hl7fieldname] != "" {
-									debugf("Field %s renamed to %s.", hl7fieldname, pub.namemappingmap[hl7fieldname])
-									hl7fieldname = pub.namemappingmap[hl7fieldname]
-								}
-								// Add to field if not empty
-								if hl7fieldvalue != "" {
-									if hl7message == "response" {
-										fields["response-"+hl7fieldname] = hl7fieldvalue
-										debugf("Added field response-%s with value %s", hl7fieldname, hl7fieldvalue)
-									} else {
-										fields[hl7fieldname] = hl7fieldvalue
-										debugf("Added field %s with value %s", hl7fieldname, hl7fieldvalue)
-									}
+							}
+							// Re-map fieldname if configured
+							if pub.namemappingmap[hl7fieldname] != "" {
+								debugf("Field %s renamed to %s.", hl7fieldname, pub.namemappingmap[hl7fieldname])
+								hl7fieldname = pub.namemappingmap[hl7fieldname]
+							}
+							// Add to field if not empty
+							if hl7fieldvalue != "" {
+								if hl7message == "response" {
+									fields["response-"+hl7fieldname] = hl7fieldvalue
+									debugf("Added field response-%s with value %s", hl7fieldname, hl7fieldvalue)
+								} else {
+									fields[hl7fieldname] = hl7fieldvalue
+									debugf("Added field %s with value %s", hl7fieldname, hl7fieldvalue)
 								}
 							}
+
 						}
 					}
-				} else {
-					if hl7message == "response" {
-						fields["response-"+hl7segmentheader] = hl7segment
-						debugf("Added segment response-%s with value %s", hl7segmentheader, hl7segment)
-					} else {
-						fields[hl7segmentheader] = hl7segment
-						debugf("Added segment %s with value %s", hl7segmentheader, hl7segment)
-					}
 				}
-			}
+			} /*else {
+				if hl7message == "response" {
+					fields["response-"+hl7segmentheader] = hl7segment
+					debugf("Added segment response-%s with value %s", hl7segmentheader, hl7segment)
+				} else {
+					fields[hl7segmentheader] = hl7segment
+					debugf("Added segment %s with value %s", hl7segmentheader, hl7segment)
+				}
+
+			}*/
 		}
 		hl7message = "response"
 	}
