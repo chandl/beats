@@ -83,6 +83,11 @@ func (pub *transPub) createEvent(requ, resp *message) beat.Event {
 		}
 		// Loop through hl7segments
 		for hl7segment := range hl7segments {
+			// Prevent error when reading blank lines.
+			if strings.TrimRight(hl7segments[hl7segment], "\n") == "" {
+	      continue;
+      }
+
 			hl7segmentheader := hl7segments[hl7segment][0:3]
 			debugf("Processing segment: %s", hl7segmentheader)
 			// If segment matches
