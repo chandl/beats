@@ -83,10 +83,11 @@ func (pub *transPub) createEvent(requ, resp *message) beat.Event {
 		}
 		// Loop through hl7segments
 		for hl7segment := range hl7segments {
+
 			// Prevent error when reading blank lines.
 			if strings.TrimRight(hl7segments[hl7segment], "\n") == "" {
-	      continue;
-      }
+				continue
+			}
 
 			hl7segmentheader := hl7segments[hl7segment][0:3]
 			debugf("Processing segment: %s", hl7segmentheader)
@@ -154,7 +155,13 @@ func (pub *transPub) createEvent(requ, resp *message) beat.Event {
 								}
 								// Add to field if not empty
 								if hl7fieldvalue != "" {
-									fields[hl7fieldname] = hl7fieldvalue
+
+									if hl7message == "response" {
+
+										fields["response-"+hl7fieldname] = hl7fieldvalue
+									} else {
+										fields[hl7fieldname] = hl7fieldvalue
+									}
 								}
 								debugf("Added field %s with value %s", hl7fieldname, hl7fieldvalue)
 							}
