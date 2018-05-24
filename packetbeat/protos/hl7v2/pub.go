@@ -142,9 +142,14 @@ func (pub *transPub) createEvent(requ, resp *message) beat.Event {
 										}
 										// Add component if not empty
 										if hl7fieldcomponentvalue != "" {
-											fields[hl7fieldcomponentname] = hl7fieldcomponentvalue
+											if hl7message == "response" {
+												fields["response-"+hl7fieldcomponentname] = hl7fieldcomponentvalue
+												debugf("Added component response-%s with value %s", hl7fieldcomponentname, hl7fieldcomponentvalue)
+											} else {
+												fields[hl7fieldcomponentname] = hl7fieldcomponentvalue
+												debugf("Added component %s with value %s", hl7fieldcomponentname, hl7fieldcomponentvalue)
+											}
 										}
-										debugf("Added component %s with value %s", hl7fieldcomponentname, hl7fieldcomponentvalue)
 									}
 								}
 							} else {
@@ -155,21 +160,25 @@ func (pub *transPub) createEvent(requ, resp *message) beat.Event {
 								}
 								// Add to field if not empty
 								if hl7fieldvalue != "" {
-
 									if hl7message == "response" {
-
 										fields["response-"+hl7fieldname] = hl7fieldvalue
+										debugf("Added field response-%s with value %s", hl7fieldname, hl7fieldvalue)
 									} else {
 										fields[hl7fieldname] = hl7fieldvalue
+										debugf("Added field %s with value %s", hl7fieldname, hl7fieldvalue)
 									}
 								}
-								debugf("Added field %s with value %s", hl7fieldname, hl7fieldvalue)
 							}
 						}
 					}
 				} else {
-					fields[hl7segmentheader] = hl7segment
-					debugf("Added segment %s with value %s", hl7segmentheader, hl7segment)
+					if hl7message == "response" {
+						fields["response-"+hl7segmentheader] = hl7segment
+						debugf("Added segment response-%s with value %s", hl7segmentheader, hl7segment)
+					} else {
+						fields[hl7segmentheader] = hl7segment
+						debugf("Added segment %s with value %s", hl7segmentheader, hl7segment)
+					}
 				}
 			}
 		}
